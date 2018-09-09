@@ -37,8 +37,37 @@ var iftttChannel = new Ifttt();
 iftttChannel.registerTrigger(YOUR_TRIGGER);
 iftttChannel.registerAction(YOUR_ACTION);
 
+// PUT CUSTOM HANDLERS HERE (see docs below)
+
 // Add IFTTT channel routes to your express app.
 iftttChannel.addExpressRoutes(app);
+```
+
+## Custom handlers
+
+```javascript
+yourChannel = new Ifttt(...);
+// ...
+yourChannel.handlers.status = function(request, callback) {
+  fetch('https://yoururl.com/api').then(function (response) {
+    // just check that it can be accessed
+    if (response.ok) {
+      callback(null, true);
+    }
+  })
+};
+yourChannel.handlers.user_info = function(request, callback) {
+  fetch('https://yoururl.com/api')
+    .then(function (response) {
+      // just check that it can be accessed
+      if (response.ok) {
+        return response.json()
+      }
+  })
+  .then(function(data) {
+          callback(data.error, {id: data.user.id, name: data.user.name, url: data.user.url});
+  });
+};
 ```
 
 ## Examples
